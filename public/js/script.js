@@ -70,3 +70,18 @@ socket.on("user-list", (users) => {
         userList.appendChild(li);
     });
 });
+socket.on("all-users", (users) => {
+    Object.entries(users).forEach(([id, user]) => {
+        const { username, latitude, longitude, avatar } = user;
+        if (!markers[id]) {
+            const icon = L.icon({
+                iconUrl: avatar,
+                iconSize: [40, 40],
+                iconAnchor: [20, 40],
+                popupAnchor: [0, -40]
+            });
+            markers[id] = L.marker([latitude, longitude], { icon }).addTo(map);
+            markers[id].bindPopup(username).openPopup();
+        }
+    });
+});

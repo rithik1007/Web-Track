@@ -6,21 +6,24 @@ const server = http.createServer(app);
 const io = socketio(server);
 const path = require("path");
 const { disconnect } = require('process');
-const users = {};
+const users = {}; // { socketId: { username, latitude, longitude, avatar } }
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname,"public")));
 
 io.on("connection", function(socket){
+    // Send all current users' locations to the new client
+    socket.emit("all-users", users);
+
     socket.on("send-location", function(data){
-        users[socket.id] = { username: data.username };
+        users[socket.id] = { username: data.username, latitude: data.latitude, longitude: data.longitude, avatar: data.avatar };
         io.emit("recieve-location", {id:socket.id, ...data});
-        io.emit("user-list", users); // broadcast user list
+        io.emit("user-list", users);
     });
 
     socket.on("disconnect", function(){
         delete users[socket.id];
         io.emit("user-disconnected", socket.id);
-        io.emit("user-list", users); // update user list
+        io.emit("user-list", users);
     });
     console.log("connected");
 });
