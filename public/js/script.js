@@ -113,3 +113,13 @@ socket.on("chat-message", (data) => {
     chatMessages.appendChild(div);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 });
+
+document.getElementById("toggle-sidebar").onclick = function() {
+    const sidebar = document.getElementById("sidebar");
+    sidebar.style.display = (sidebar.style.display === "none" || sidebar.style.display === "") ? "block" : "none";
+};
+
+document.getElementById("toggle-chat").onclick = function() {
+    const chat = document.getElementById("chat");
+    chat.style.display = (chat.style.display === "none" || chat.style.display === "") ? "block" : "none";
+};

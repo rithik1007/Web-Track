@@ -20,7 +20,7 @@ body {
     padding: 0;
 }
 
-/* Sidebar */
+/* Sidebar (Connected Users) */
 #sidebar {
     min-width: 180px;
     font-size: 1rem;
@@ -29,6 +29,7 @@ body {
     border-radius: 10px;
     box-shadow: 0 2px 12px #0001;
     padding: 16px;
+    display: none; /* Hidden by default */
 }
 
 #sidebar h4 {
@@ -39,8 +40,13 @@ body {
 }
 
 #userList li {
-    padding: 4px 0;
+    padding: 6px 0;
     border-bottom: 1px solid #eee;
+    font-size: 1rem;
+    color: #444;
+}
+#userList li:last-child {
+    border-bottom: none;
 }
 
 /* Chat box */
@@ -50,6 +56,8 @@ body {
     box-shadow: 0 2px 12px #0001;
     padding: 16px;
     font-size: 1rem;
+    width: 300px;
+    display: none; /* Hidden by default */
 }
 
 #chat-messages {
@@ -59,6 +67,8 @@ body {
     border-radius: 6px;
     padding: 8px;
     margin-bottom: 10px;
+    height: 150px;
+    overflow-y: auto;
 }
 
 #chat-form input[type="text"] {
@@ -69,6 +79,7 @@ body {
     outline: none;
     margin-right: 8px;
     transition: border 0.2s;
+    flex: 1;
 }
 
 #chat-form input[type="text"]:focus {
@@ -104,4 +115,40 @@ select#map-theme {
 
 select#map-theme:focus {
     border: 1.5px solid #0078d7;
+}
+
+/* Toggle Buttons for Sidebar and Chat */
+#toggle-sidebar, #toggle-chat {
+    background: #0078d7;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 22px;
+    font-size: 1rem;
+    font-weight: 500;
+    box-shadow: 0 2px 8px #0002;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    margin-bottom: 8px;
+    outline: none;
+}
+
+#toggle-sidebar:hover, #toggle-chat:hover {
+    background: #005fa3;
+    box-shadow: 0 4px 16px #0003;
+}
+
+/* Positioning for the buttons (top right corner, stacked) */
+#toggle-sidebar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1100;
+}
+
+#toggle-chat {
+    position: absolute;
+    top: 60px;
+    right: 10px;
+    z-index: 1100;
 }
