@@ -22,10 +22,17 @@ if(navigator.geolocation){
 
 const map = L.map("map").setView([0,0], 16);
 
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: "OpenStreetMap"
-}).addTo(map);
+const tileLayers = {
+    osm: L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: "OpenStreetMap" }),
+    dark: L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", { attribution: "©OpenStreetMap, ©CartoDB" }),
+    satellite: L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", { attribution: "Tiles © Esri" })
+};
+tileLayers.osm.addTo(map);
 
+document.getElementById("map-theme").addEventListener("change", function() {
+    Object.values(tileLayers).forEach(layer => map.removeLayer(layer));
+    tileLayers[this.value].addTo(map);
+});
 
 socket.on("recieve-location", (data)=>{
     const {id, latitude, longitude, username, avatar} = data;
@@ -84,4 +91,25 @@ socket.on("all-users", (users) => {
             markers[id].bindPopup(username).openPopup();
         }
     });
+});
+
+// Chat functionality
+const chatForm = document.getElementById("chat-form");
+const chatInput = document.getElementById("chat-input");
+const chatMessages = document.getElementById("chat-messages");
+
+chatForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const message = chatInput.value.trim();
+    if(message) {
+        socket.emit("chat-message", { username, message });
+        chatInput.value = "";
+    }
+});
+
+socket.on("chat-message", (data) => {
+    const div = document.createElement("div");
+    div.innerHTML = `<strong>${data.username}:</strong> ${data.message}`;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 });

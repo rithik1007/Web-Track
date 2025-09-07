@@ -20,6 +20,10 @@ io.on("connection", function(socket){
         io.emit("user-list", users);
     });
 
+    socket.on("chat-message", (data) => {
+        io.emit("chat-message", data);
+    });
+
     socket.on("disconnect", function(){
         delete users[socket.id];
         io.emit("user-disconnected", socket.id);
