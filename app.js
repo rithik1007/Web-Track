@@ -47,9 +47,9 @@ passport.deserializeUser((user, done) => {
 
 // GitHub OAuth strategy
 passport.use(new GitHubStrategy({
-    clientID: process.env.GITHUB_CLIENT_ID,
-    clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: process.env.BASE_URL + '/auth/github/callback'
+    clientID: process.env.GITHUB_CLIENT_ID_PROD,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET_PROD,
+    callbackURL: process.env.BASE_URL_PROD + '/auth/github/callback'
 }, (accessToken, refreshToken, profile, done) => {
     return done(null, {
         id: profile.id,
