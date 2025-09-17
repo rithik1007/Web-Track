@@ -8,8 +8,7 @@ const path = require("path");
 const { disconnect } = require('process');
 const session = require('express-session');
 const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const GitHubStrategy = require('passport-github2').Strategy;
+const GitHubStrategy = require('passport-github2').Strategy; // Removed GoogleStrategy
 
 const users = {}; // { socketId: { username, latitude, longitude, avatar } }
 app.set("view engine", "ejs");
@@ -33,25 +32,10 @@ passport.deserializeUser((user, done) => {
     done(null, user);
 });
 
-// Google OAuth strategy
-passport.use(new GoogleStrategy({
-    clientID: 'YOUR_GOOGLE_CLIENT_ID',
-    clientSecret: 'YOUR_GOOGLE_CLIENT_SECRET',
-    callbackURL: '/auth/google/callback'
-}, (accessToken, refreshToken, profile, done) => {
-    // You can store more info if needed
-    return done(null, {
-        id: profile.id,
-        displayName: profile.displayName,
-        avatar: profile.photos[0].value,
-        email: profile.emails[0].value
-    });
-}));
-
 // GitHub OAuth strategy
 passport.use(new GitHubStrategy({
-    clientID: 'YOUR_GITHUB_CLIENT_ID',
-    clientSecret: 'YOUR_GITHUB_CLIENT_SECRET',
+    clientID: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
     callbackURL: '/auth/github/callback'
 }, (accessToken, refreshToken, profile, done) => {
     return done(null, {
@@ -93,19 +77,6 @@ function ensureAuthenticated(req, res, next) {
 app.get("/", ensureAuthenticated, function(req, res){
     res.render("index", { user: req.user });
 });
-
-// Google OAuth login
-app.get('/auth/google',
-    passport.authenticate('google', { scope: ['profile', 'email'] })
-);
-
-// Google OAuth callback
-app.get('/auth/google/callback',
-    passport.authenticate('google', { failureRedirect: '/' }),
-    (req, res) => {
-        res.redirect('/');
-    }
-);
 
 // GitHub OAuth login
 app.get('/auth/github',
