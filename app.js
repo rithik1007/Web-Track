@@ -46,23 +46,18 @@ passport.deserializeUser((user, done) => {
 });
 
 // GitHub OAuth strategy
-passport.use(
-  new GitHubStrategy(
-    {
-      clientID: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: process.env.BASE_URL + "/auth/github/callback",
-    },
-    (accessToken, refreshToken, profile, done) => {
-      return done(null, {
+passport.use(new GitHubStrategy({
+    clientID: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    callbackURL: process.env.BASE_URL + '/auth/github/callback'
+}, (accessToken, refreshToken, profile, done) => {
+    return done(null, {
         id: profile.id,
         displayName: profile.displayName || profile.username,
-        avatar: profile.photos[0] ? profile.photos[0].value : "",
-        email: profile.emails && profile.emails[0] ? profile.emails[0].value : "",
-      });
-    }
-  )
-);
+        avatar: profile.photos[0] ? profile.photos[0].value : '',
+        email: profile.emails && profile.emails[0] ? profile.emails[0].value : ''
+    });
+}));
 
 // Socket.io logic
 io.on("connection", (socket) => {
