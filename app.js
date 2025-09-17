@@ -16,9 +16,9 @@ const users = {}; // { socketId: { username, latitude, longitude, avatar } }
 
 // ✅ Debug ENV values (safe: don’t log secret itself)
 console.log("DEBUG ENV:", {
-  clientID: process.env.GITHUB_CLIENT_ID,
-  clientSecret: process.env.GITHUB_CLIENT_SECRET ? "Loaded" : "Missing",
-  baseUrl: process.env.BASE_URL,
+  clientID: process.env.GITHUB_CLIENT_ID_PROD,
+  clientSecret: process.env.GITHUB_CLIENT_SECRET_PROD ? "Loaded" : "Missing",
+  baseUrl: process.env.BASE_URL_PROD,
 });
 
 // View engine + static files
